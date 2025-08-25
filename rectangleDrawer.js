@@ -5,9 +5,9 @@ class RectangleDrawer
         this.prog = InitShaderProgram(rectangleVS, rectangleFS);
 
         this.mvp = gl.getUniformLocation(this.prog, "mvp");
+        this.ucolor = gl.getUniformLocation(this.prog, "u_color");
 
         this.color = gl.getAttribLocation(this.prog, "color");
-
         this.verPos = gl.getAttribLocation(this.prog, "pos");
 
         // create the buffer objects
@@ -63,12 +63,18 @@ class RectangleDrawer
         gl.vertexAttribPointer(this.verPos, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(this.verPos);
 
-        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorbuffer);
-        gl.vertexAttribPointer(this.color, 4, gl.FLOAT, false, 0, 0);
-        gl.enableVertexAttribArray(this.color);
+        // gl.bindBuffer(gl.ARRAY_BUFFER, this.colorbuffer);
+        // gl.vertexAttribPointer(this.color, 4, gl.FLOAT, false, 0, 0);
+        // gl.enableVertexAttribArray(this.color);
 
-        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexbuffer);
-        gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+        // gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.indexbuffer);
+        // gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+
+        gl.uniform4f(this.ucolor, 0, 0, 1, 1);
+        gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 0);
+
+        gl.uniform4f(this.ucolor, 1, 1, 0, 1);
+        gl.drawElements(gl.TRIANGLES, 3, gl.UNSIGNED_SHORT, 3 * 2);
     }
 }
 
@@ -78,20 +84,21 @@ var rectangleVS = `
 
     uniform mat4 mvp;
     
-    varying vec4 vcolor;
+    // varying vec4 vcolor;
 
     void main() {
         gl_Position = mvp * vec4(pos, 1);
-        vcolor = color;
+        // vcolor = color;
     }
 `
 
 var rectangleFS = `
     precision mediump float;
 
-    varying vec4 vcolor;
+    // varying vec4 vcolor;
+    uniform vec4 u_color;
 
     void main() {
-        gl_FragColor = vcolor; 
+        gl_FragColor = u_color; 
     }
 `
