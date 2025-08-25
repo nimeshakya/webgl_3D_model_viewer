@@ -1,5 +1,7 @@
 // globals
-var canvas, gl, triangleDrawer;
+var triangleDrawer;
+var meshDrawer;
+var canvas, gl;
 
 function InitWebGL() {
     canvas = document.getElementById("canvas");
