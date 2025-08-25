@@ -15,6 +15,7 @@ function InitWebGL() {
 
     // initialize buffers and shader programs
     triangleDrawer = new TriangleDrawer();
+    rectangleDrawer = new RectangleDrawer();
 
     UpdateCanvasSize();
 }
@@ -72,7 +73,8 @@ function CompileShader(type, source, wgl=gl) {
 function DrawScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
-    triangleDrawer.draw();
+    // triangleDrawer.draw();
+    rectangleDrawer.draw();
 }
 
 window.onload = function () {
