@@ -4,7 +4,7 @@ var meshDrawer;
 var boxDrawer;
 var canvas, gl;
 var perspectiveMatrix; // perspective projection matrix
-var rotX=0, rotY=0, transZ=3, autoRotate=0;
+var rotX=0, rotY=0, transZ=4, autoRotate=0;
 
 function InitWebGL() {
     canvas = document.getElementById("canvas");
@@ -64,7 +64,7 @@ function UpdateProjectionMatrix()
     ]
 }
 
-function GetModelViewProjection(projectionMatrix, translationX, translationY, translationZ)
+function GetModelViewProjection(projectionMatrix, translationX, translationY, translationZ, rotationX, rotationY)
 {
     var trans = [
         1, 0, 0, 0,
@@ -73,7 +73,25 @@ function GetModelViewProjection(projectionMatrix, translationX, translationY, tr
         translationX, translationY, translationZ, 1
     ]
 
-    return MatrixMult(projectionMatrix, trans);
+    var rotXMatrix = [
+		1, 0, 0, 0,
+		0, Math.cos(rotationX), -Math.sin(rotationX), 0,
+		0, Math.sin(rotationX), Math.cos(rotationX), 0,
+		0, 0, 0, 1
+	]
+
+	var rotYMatrix = [
+		Math.cos(rotationY), 0, -Math.sin(rotationY), 0,
+		0, 1, 0, 0,
+		Math.sin(rotationY), 0, Math.cos(rotationY), 0,
+		0, 0, 0, 1
+	]
+
+    var mvp = MatrixMult(rotYMatrix, rotXMatrix);
+    mvp = MatrixMult(trans, mvp);
+    mvp = MatrixMult(projectionMatrix, mvp);
+
+    return mvp;
 }
 
 function MatrixMult(A, B) {
@@ -129,11 +147,33 @@ function DrawScene() {
 
     // triangleDrawer.draw();
     // rectangleDrawer.draw();
-    var mvp = GetModelViewProjection(perspectiveMatrix, 0, 0, transZ);
+    var mvp = GetModelViewProjection(perspectiveMatrix, 0, 0, transZ, rotX, rotY + autoRotate);
     boxDrawer.draw(mvp);
 }
 
 window.onload = function () {
     InitWebGL();
     DrawScene();
+}
+
+window.onresize = function() {
+    UpdateCanvasSize();
+    DrawScene();
+};
+
+var timer;
+function AutoRotate(param)
+{
+    if (param.checked) {
+        timer = setInterval(function() {
+            var v = document.getElementById("rotation-speed").value;
+            autoRotate += 0.0005 * v;
+            if (autoRotate > 2*Math.PI) autoRotate -= 2*Math.PI;
+            DrawScene();
+        }, 30); // approximately 30 FPS
+        document.getElementById("rotation-speed").disabled = false;
+    } else {
+        clearInterval(timer);
+        document.getElementById("rotation-speed").disabled = true;
+    }
 }
