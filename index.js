@@ -153,6 +153,39 @@ function DrawScene() {
 
 window.onload = function () {
     InitWebGL();
+    canvas.zoom = function(s) {
+        // Update the translation along the Z-axis based on the zoom level
+        transZ *= s / canvas.height + 1;
+        UpdateProjectionMatrix();
+        DrawScene();
+    }
+    canvas.onwheel = function (event) { canvas.zoom(0.3 * event.deltaY) }
+    canvas.onmousedown = function(event) {
+        var cx = event.clientX;
+        var cy = event.clientY;
+        if (event.ctrlKey) {
+            canvas.onmousemove = function(e) {
+                canvas.zoom(5 * (e.clientY - cy));
+                cy = e.clientY;
+            }
+        } else {
+            canvas.onmousemove = function(e) {
+                var dx = cx - e.clientX;
+                var dy = cy - e.clientY;
+                rotX -= dy / canvas.width * 5;
+                rotY += dx / canvas.height * 5;
+                cx = e.clientX;
+                cy = e.clientY;
+                UpdateProjectionMatrix();
+                DrawScene();
+            }
+        }
+    }
+
+    canvas.onmouseup = canvas.onmouseleave = function() {
+        canvas.onmousemove = null;
+    }
+
     DrawScene();
 }
 
