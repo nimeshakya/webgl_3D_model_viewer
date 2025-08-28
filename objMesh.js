@@ -73,7 +73,7 @@ class ObjMesh
                             nf.push(nid - 1); // convert to zero-based index
                         }
                     }
-                    this.faces.push(f);
+                    this.face.push(f);
                     if (tf.length > 0) this.textureFac.push(tf);
                     if (nf.length > 0) this.normalsFac.push(nf);
                     break;
@@ -111,7 +111,7 @@ class ObjMesh
 
     addTriangleToBuffers(vBuffer, tBuffer, nBuffer, fi, i, j, k)
     {
-        var f = this.faces[fi];
+        var f = this.face[fi];
         var tf = this.textureFac[fi];
         var nf = this.normalsFac[fi];
         this.addTriangleToBuffer(vBuffer, this.vertices, f, i, j, k, this.addVertToBuffer3);
@@ -149,7 +149,7 @@ class ObjMesh
         var tBuffer = [];
         var nBuffer = [];
         
-        for (var i = 0; i < this.faces.length; ++i) {
+        for (var i = 0; i < this.face.length; ++i) {
             if (this.face[i].length) continue;
             this.addTriangleToBuffers(vBuffer, tBuffer, nBuffer, i, 0, 1, 2);
             for (var j = 3; j < this.face[i].length; ++j) {
