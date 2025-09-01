@@ -43,7 +43,7 @@ class MeshDrawer
             this.yz = MatrixMult(
                 [
                     1, 0, 0, 0,
-                    0, 0, -1, 0,
+                    0, -1, 0, 0,
                     0, 0, 1, 0,
                     0, 0, 0, 1
                 ],
@@ -126,7 +126,7 @@ const meshVS = `
     {
         v_texCoord = texCoord;
 
-        gl_Position = mvp * vec4(pos, 1.0);
+        gl_Position = mvp * yzSwap * vec4(pos, 1.0);
     }
 `;
 

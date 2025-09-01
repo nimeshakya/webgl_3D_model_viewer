@@ -36,8 +36,8 @@
                     <label for="show-texture">Show Texture</label>
                 </div>
                 <div class="control">
-                    <input type="checkbox" class="check-box" name="swapYZ" id="swapYZ">
-                    <label for="swapYZ">Swap YZ</label>
+                    <input type="checkbox" class="check-box" name="swapYZ" id="swapYZ" onchange="SwapYZ(this)">
+                    <label for="swapYZ">Swap Y - Z</label>
                 </div>
                 
 
@@ -46,7 +46,7 @@
                     <label for="auto-rotate">Auto Rotation</label>
                 </div>
                 <div class="control">
-                    <input type="range" id="rotation-speed" name="rotation-speed" min="1" max="100" value="50" onchange="UpdateRotationSpeed(this)">
+                    <input type="range" id="rotation-speed" name="rotation-speed" min="1" max="100" value="50">
                 </div>
 
                 <div class="control">
