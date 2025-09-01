@@ -5,6 +5,7 @@ var boxDrawer;
 var canvas, gl;
 var perspectiveMatrix; // perspective projection matrix
 var rotX=0, rotY=0, transZ=4, autoRotate=0;
+var showBox, showTexture, swapYZ;
 
 function InitWebGL() {
     canvas = document.getElementById("canvas");
@@ -148,10 +149,11 @@ function DrawScene() {
     // triangleDrawer.draw();
     // rectangleDrawer.draw();
     var mvp = GetModelViewProjection(perspectiveMatrix, 0, 0, transZ, rotX, rotY + autoRotate);
-    boxDrawer.draw(mvp);
+    if (showBox.checked) boxDrawer.draw(mvp);
 }
 
 window.onload = function () {
+    showBox = document.getElementById("show-box");
     InitWebGL();
     canvas.zoom = function(s) {
         // Update the translation along the Z-axis based on the zoom level
@@ -193,6 +195,10 @@ window.onresize = function() {
     UpdateCanvasSize();
     DrawScene();
 };
+
+function ShowBox() {
+
+}
 
 var timer;
 function AutoRotate(param)
