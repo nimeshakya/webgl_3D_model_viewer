@@ -7,6 +7,7 @@
     <!-- CSS stylesheet -->
     <link rel="stylesheet" href="style.css">
     <!-- Triangle Viewer -->
+    <script src="meshDrawer.js"></script>
     <script src="objMesh.js"></script>
     <script src="triangleDrawer.js"></script>
     <script src="rectangleDrawer.js"></script>
@@ -46,6 +47,11 @@
                 </div>
                 <div class="control">
                     <input type="range" id="rotation-speed" name="rotation-speed" min="1" max="100" value="50" onchange="UpdateRotationSpeed(this)">
+                </div>
+
+                <div class="control">
+                    <label for="obj">Obj model: </label>
+                    <input type="file" id="obj" name="obj" onchange="LoadObj(this)" accept=".obj" >
                 </div>
             </div>
         </div>

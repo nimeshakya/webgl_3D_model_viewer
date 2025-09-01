@@ -115,10 +115,10 @@ class ObjMesh
         var tf = this.textureFac[fi];
         var nf = this.normalsFac[fi];
         this.addTriangleToBuffer(vBuffer, this.vertices, f, i, j, k, this.addVertToBuffer3);
-        if (tf > 0) {
+        if (tf.length > 0) {
             this.addTriangleToBuffer(tBuffer, this.texturePos, tf, i, j, k, this.addVertToBuffer2);
         }
-        if (nf > 0) {
+        if (nf.length > 0) {
             this.addTriangleToBuffer(nBuffer, this.normals, nf, i, j, k, this.addVertToBuffer3);
         }
     }
@@ -148,14 +148,14 @@ class ObjMesh
         var vBuffer = [];
         var tBuffer = [];
         var nBuffer = [];
-        
         for (var i = 0; i < this.face.length; ++i) {
-            if (this.face[i].length) continue;
+            if (this.face[i].length < 3) continue;
             this.addTriangleToBuffers(vBuffer, tBuffer, nBuffer, i, 0, 1, 2);
             for (var j = 3; j < this.face[i].length; ++j) {
-                this.addTriangleToBuffers(vBuffer, tBuffer, nBuffer, i, j - 1, j, j + 1);
+                this.addTriangleToBuffers(vBuffer, tBuffer, nBuffer, i, 0, j - 1, j);
             }
         }
+
         return {positionBuffer: vBuffer, texCoordBuffer: tBuffer, normalBuffer: nBuffer};
     }
 }

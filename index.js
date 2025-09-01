@@ -1,10 +1,11 @@
 // globals
 var triangleDrawer;
+var rectangleDrawer;
 var meshDrawer;
 var boxDrawer;
 var canvas, gl;
 var perspectiveMatrix; // perspective projection matrix
-var rotX=0, rotY=0, transZ=4, autoRotate=0;
+var rotX=0, rotY=0, transZ=3.5, autoRotate=0;
 var showBox, showTexture, swapYZ;
 
 function InitWebGL() {
@@ -23,6 +24,7 @@ function InitWebGL() {
     triangleDrawer = new TriangleDrawer();
     rectangleDrawer = new RectangleDrawer();
     boxDrawer = new BoxDrawer();
+    meshDrawer = new MeshDrawer();
 
     UpdateCanvasSize();
 }
@@ -149,6 +151,7 @@ function DrawScene() {
     // triangleDrawer.draw();
     // rectangleDrawer.draw();
     var mvp = GetModelViewProjection(perspectiveMatrix, 0, 0, transZ, rotX, rotY + autoRotate);
+    meshDrawer.draw(mvp);
     if (showBox.checked) boxDrawer.draw(mvp);
 }
 
@@ -196,8 +199,14 @@ window.onresize = function() {
     DrawScene();
 };
 
-function ShowBox() {
+function ShowTexture(param) {
+    meshDrawer.showTexture(param.checked);
+    DrawScene();
+}
 
+function SwapYZ(param) {
+    meshDrawer.swapYZ(param.checked);
+    DrawScene();
 }
 
 var timer;
@@ -214,5 +223,34 @@ function AutoRotate(param)
     } else {
         clearInterval(timer);
         document.getElementById("rotation-speed").disabled = true;
+    }
+}
+
+function LoadObj(param) {
+    if (param.files && param.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var mesh = new ObjMesh;
+            mesh.parse(e.target.result);
+            var box = mesh.getBoundingBox();
+            var shift = [
+                -(box.min[0] + box.max[0]) / 2,
+                -(box.min[1] + box.max[1]) / 2,
+                -(box.min[2] + box.max[2]) / 2
+            ];
+            var size = [
+                (box.max[0]-box.min[0])/2,
+                (box.max[1]-box.min[1])/2,
+                (box.max[2]-box.min[2])/2
+            ];
+            var maxSize = Math.max(size[0], size[1], size[2]);
+            var scale = 1/maxSize;
+            mesh.shiftAndScale(shift, scale);
+            var buffers = mesh.getVertexBuffers();
+            
+            meshDrawer.setMesh(buffers.positionBuffer, buffers.texCoordBuffer);
+            DrawScene();
+        }
+        reader.readAsText(param.files[0]);
     }
 }
