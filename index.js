@@ -6,7 +6,7 @@ var boxDrawer;
 var canvas, gl;
 var perspectiveMatrix; // perspective projection matrix
 var rotX=0, rotY=0, transZ=3.5, autoRotate=0;
-var showBox, showTexture, swapYZ;
+var showBox;
 
 function InitWebGL() {
     canvas = document.getElementById("canvas");
@@ -157,6 +157,7 @@ function DrawScene() {
 
 window.onload = function () {
     showBox = document.getElementById("show-box");
+
     InitWebGL();
     canvas.zoom = function(s) {
         // Update the translation along the Z-axis based on the zoom level
@@ -252,5 +253,25 @@ function LoadObj(param) {
             DrawScene();
         }
         reader.readAsText(param.files[0]);
+    }
+}
+
+function LoadTexture(param) {
+    if (param.files && param.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            var img = document.getElementById("texture-img");
+            img.onload = function() {
+                meshDrawer.setTexture(img);
+
+                var showTex = document.getElementById("show-texture");
+                meshDrawer.showTexture(showTex.checked);
+
+                DrawScene();
+            }
+            // set this texture image to UI image viewer
+            img.src = e.target.result;
+        }
+        reader.readAsDataURL(param.files[0]);
     }
 }
