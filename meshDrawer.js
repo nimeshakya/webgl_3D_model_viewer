@@ -73,14 +73,14 @@ class MeshDrawer
         gl.uniformMatrix4fv(this.yzSwap, false, this.yz);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.vertexbuffer);
-        gl.vertexAttribPointer(this.pos, 3, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(this.pos);
+        gl.vertexAttribPointer(this.pos, 3, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.texBuffer);
-        gl.vertexAttribPointer(this.texCoord, 2, gl.FLOAT, false, 0, 0);
         gl.enableVertexAttribArray(this.texCoord);
+        gl.vertexAttribPointer(this.texCoord, 2, gl.FLOAT, false, 0, 0);
 
-        gl.drawArrays(gl.TRIANGLES, 0, this.numTriangles * 3);
+        gl.drawArrays(gl.TRIANGLES, 0, this.numTriangles);
     }
 
     // add a texture to the mesh
@@ -93,16 +93,15 @@ class MeshDrawer
         gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
 
         // set texture parameters
-        gl.generateMinmap(gl.TEXTURE_2D)
+        gl.generateMipmap(gl.TEXTURE_2D);
 
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MINMAP_LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.REPEAT);
 
         // set uniform parameters for Fragment Shader
-        const sampler = gl.getUniformLocation(this.prog, "tex");
-        gl.uniform1i(sampler, 0);
+        gl.uniform1i(this.tex, 0);
     }
 
     // Show texture or not
