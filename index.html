@@ -53,10 +53,13 @@
                     <label for="obj">Obj model: </label>
                     <input type="file" id="obj" name="obj" onchange="LoadObj(this)" accept=".obj" >
                 </div>
+                <div class="control">
+                    <label for="texture">Texture File: </label>
+                    <input type="file" id="texture" name="texture" onchange="LoadTexture(this)" accept=".png, .jpg, .jpeg" >
+                </div>
             </div>
+            <img id="texture-img">
         </div>
-
-
     </div>
 </body>
 </html>
