@@ -45,26 +45,31 @@ function UpdateCanvasSize() {
     UpdateProjectionMatrix();
 }
 
-function UpdateProjectionMatrix()
+function ProjectionMatrix(c, z, fov_angle=60)
 {
     // r is the aspect ratio
-    var r = canvas.width / canvas.height;
+    var r = c.width / c.height;
     // n is the near clipping plane
-    var n = (transZ - 1.74);
+    var n = (z - 1.74);
     // n shouldn't be nearer that 0.001
     const min_n = 0.001;
     if (n < min_n) n = min_n;
     // f is the far clipping plane
-    var f = (transZ + 1.74);
-    var fov = 3.145 * 60 / 180; // field of view be 60 degrees
+    var f = (z + 1.74);
+    var fov = 3.145 * fov_angle / 180; // field of view be 60 degrees
     // s is the scale factor
     var s = 1 / Math.tan(fov / 2);
-    perspectiveMatrix = [
+    return [
         s/r, 0, 0, 0,
         0, s, 0, 0,
         0, 0, (n+f)/(f-n), 1,
         0, 0, -2*n*f/(f-n), 0
     ]
+}
+
+function UpdateProjectionMatrix()
+{
+    perspectiveMatrix = ProjectionMatrix(canvas, transZ);
 }
 
 function GetModelViewProjection(projectionMatrix, translationX, translationY, translationZ, rotationX, rotationY)
