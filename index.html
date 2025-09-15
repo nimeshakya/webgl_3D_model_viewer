@@ -7,6 +7,7 @@
     <!-- CSS stylesheet -->
     <link rel="stylesheet" href="style.css">
     <!-- Triangle Viewer -->
+     <script src="lightView.js"></script>
     <script src="meshDrawer.js"></script>
     <script src="objMesh.js"></script>
     <script src="triangleDrawer.js"></script>
@@ -25,8 +26,13 @@
 
         <div class="ui-container">
             <h1>WebGL 3D Model Viewer</h1>
+            <div class="control-group">
+                <canvas id="lightcontrol"></canvas>
+                <div id="lightcontrol-label">Light Direction</div>
+            </div>
 
             <div class="control-group">
+
                 <div class="control">
                     <input type="checkbox" class="check-box" name="show-box" id="show-box" onchange="DrawScene()" checked>
                     <label for="show-box">Show Box</label>
@@ -47,6 +53,14 @@
                 </div>
                 <div class="control">
                     <input type="range" id="rotation-speed" name="rotation-speed" min="1" max="100" value="50">
+                </div>
+
+                <div class="shininess-control control">
+                    <span>
+                        <span id="shininess-label">Shininess:</span>
+                        <span id="shininess-value">1</span>
+                    </span>
+                    <input type="range" id="shininess-exp"  min="1" max="100"  value="50" oninput="SetShininess(this)" />
                 </div>
 
                 <div class="control">

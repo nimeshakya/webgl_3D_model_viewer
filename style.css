@@ -34,6 +34,7 @@
     height: 100%;
     background-color: darkslategrey;
     padding: 20px;
+    overflow: auto;
 }
 
 .ui-container > h1 {
@@ -46,6 +47,23 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+    position: relative;
+}
+
+#lightcontrol {
+    width: 12em;
+    aspect-ratio: 1 / 1;
+    background-color: black;
+    outline: 1px solid white;
+    outline-offset: -1px;
+}
+
+#lightcontrol-label {
+    position: absolute;
+    top: 0.2em;
+    left: 0.2em;
+    pointer-events: none;
+    color: white;
 }
 
 .control {
@@ -67,6 +85,23 @@
 .control > label {
     color: white;
     font-size: 22px;
+}
+
+.shininess-control {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+#shininess-label, #shininess-value {
+    color: white;
+    font-size: 22px;
+    float: left;
+}
+
+#shininess-exp {
+    width: 100%;
 }
 
 #texture-img {

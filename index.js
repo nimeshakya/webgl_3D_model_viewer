@@ -72,7 +72,7 @@ function UpdateProjectionMatrix()
     perspectiveMatrix = ProjectionMatrix(canvas, transZ);
 }
 
-function GetModelViewProjection(projectionMatrix, translationX, translationY, translationZ, rotationX, rotationY)
+function GetModelViewMatrix(translationX, translationY, translationZ, rotationX, rotationY)
 {
     var trans = [
         1, 0, 0, 0,
@@ -97,7 +97,6 @@ function GetModelViewProjection(projectionMatrix, translationX, translationY, tr
 
     var mvp = MatrixMult(rotYMatrix, rotXMatrix);
     mvp = MatrixMult(trans, mvp);
-    mvp = MatrixMult(projectionMatrix, mvp);
 
     return mvp;
 }
@@ -151,12 +150,18 @@ function CompileShader(type, source, wgl=gl) {
 }
 
 function DrawScene() {
-    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
     // triangleDrawer.draw();
     // rectangleDrawer.draw();
-    var mvp = GetModelViewProjection(perspectiveMatrix, 0, 0, transZ, rotX, rotY + autoRotate);
-    meshDrawer.draw(mvp);
+    var mv = GetModelViewMatrix(0, 0, transZ, rotX, rotY + autoRotate);
+    var mvp = MatrixMult(perspectiveMatrix, mv);
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+    var nrmTrans = [
+        mv[0], mv[1], mv[2],
+        mv[4], mv[5], mv[6],
+        mv[8], mv[9], mv[10]
+    ]
+    meshDrawer.draw(mvp, mv, nrmTrans);
     if (showBox.checked) boxDrawer.draw(mvp);
 }
 
@@ -164,6 +169,7 @@ window.onload = function () {
     showBox = document.getElementById("show-box");
 
     InitWebGL();
+    lightView = new LightView();
     canvas.zoom = function(s) {
         // Update the translation along the Z-axis based on the zoom level
         transZ *= s / canvas.height + 1;
@@ -196,6 +202,8 @@ window.onload = function () {
     canvas.onmouseup = canvas.onmouseleave = function() {
         canvas.onmousemove = null;
     }
+
+    SetShininess(document.getElementById("shininess-exp"));
 
     DrawScene();
 }
@@ -254,7 +262,7 @@ function LoadObj(param) {
             mesh.shiftAndScale(shift, scale);
             var buffers = mesh.getVertexBuffers();
             
-            meshDrawer.setMesh(buffers.positionBuffer, buffers.texCoordBuffer);
+            meshDrawer.setMesh(buffers.positionBuffer, buffers.texCoordBuffer, buffers.normalBuffer);
             DrawScene();
         }
         reader.readAsText(param.files[0]);
@@ -279,4 +287,12 @@ function LoadTexture(param) {
         }
         reader.readAsDataURL(param.files[0]);
     }
+}
+
+function SetShininess(param) {
+    var exp = param.value;
+    var shininess = Math.pow(10, exp/25);
+    document.getElementById("shininess-value").innerText = shininess.toFixed(shininess < 10 ? 2 : 0);
+    meshDrawer.setShininess(shininess);
+    DrawScene();
 }
