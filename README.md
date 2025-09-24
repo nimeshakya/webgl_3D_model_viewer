@@ -19,7 +19,7 @@ I’ve included some of the models and texture files provided in that course for
 
 1. Clone this repository:
 ```bash
-git clone git@github.com:nimeshakya/webgl_3D_model_viewer.git
+git clone https://github.com/nimeshakya/webgl_3D_model_viewer.git
 ```
 2. Go to the directory:
 ```bash
